@@ -5,8 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.cg.oms.beans.Customer;
+import com.cg.oms.main.OMSApp;
 @SpringBootApplication
-@ComponentScan(basePackageClasses = Customer.class)
+@ComponentScan(basePackageClasses = OMSApp.class)
 public class OnlineMedicalStoreApplication {
 
 	public static void main(String[] args) {

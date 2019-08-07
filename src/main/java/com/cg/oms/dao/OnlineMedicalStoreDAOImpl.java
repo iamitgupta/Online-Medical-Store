@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -18,19 +19,15 @@ import com.cg.oms.beans.CustomerAddress;
 import com.cg.oms.beans.CustomerMessage;
 import com.cg.oms.beans.Order;
 import com.cg.oms.beans.Product;
+
 @Transactional
 @Repository
-public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO{
-	
-	public static final EntityManagerFactory emf=
-			Persistence.createEntityManagerFactory("MySQLUnit");
+public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
+
+	public static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("MySQLUnit");
 
 	@Override
 	public Boolean registerCustomer(Customer customer) {
-		EntityManager em =  emf.createEntityManager();
-		em.getTransaction().begin();
-		em.persist(customer);
-		em.getTransaction().commit();
 		return null;
 	}
 
@@ -137,8 +134,53 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO{
 	}
 
 	@Override
-	public Cart addToCart(int productId, int customerId) {
-		return null;
+	public Cart addToCart(int productId,int productCount, int customerId) {
+		// search if the user's cart already exists
+		Cart cart = null;
+		int slotNo = getCartAvailability(customerId);
+		try {
+			EntityManager em = emf.createEntityManager();
+			em.getTransaction().begin();
+			TypedQuery<Cart> query = em.createQuery("from Cart c where customerId= :cId", Cart.class);
+			query.setParameter("cId", customerId);
+			List<Cart> cartList= query.getResultList();
+			if(cartList.size()>0)
+			 {
+				cart=cartList.get(0);
+				if (slotNo == 1) {
+					cart.setProduct1Id(productId);
+					cart.setProduct1Count(0);
+				} else if (slotNo == 2) {
+					cart.setProduct2Id(productId);
+					cart.setProduct2Count(0);
+				} else if (slotNo == 3) {
+					cart.setProduct2Id(productId);
+					cart.setProduct3Count(0);
+				}
+			}
+			em.getTransaction().commit();
+			em.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// if the customer doesn't have cart create new cart
+		if (cart == null) {
+			cart = new Cart();
+			try {
+				EntityManager em = emf.createEntityManager();
+				em.getTransaction().begin();
+				cart.setCustomerId(customerId);
+				cart.setProduct1Id(productId);
+				cart.setProduct2Id(0);
+				cart.setProduct2Id(0);
+				em.persist(cart);
+				em.getTransaction().commit();
+				em.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return cart;
 	}
 
 	@Override
@@ -155,8 +197,33 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO{
 
 	@Override
 	public Integer getCartAvailability(int customerId) {
-		// TODO Auto-generated method stub
-		return null;
+		// search if the user's cart already exists
+		// then return the available slot
+		Cart cart = null;
+		// 0 means no slot available
+		int slotNo = 0;
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			TypedQuery<Cart> query = em.createQuery("from Cart c where customerId= :cId", Cart.class);
+			query.setParameter("cId", customerId);
+			cart = query.getSingleResult();
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			em.close();
+		}
+			if (cart!=null) {
+				if (cart.getProduct1Id() == 0) {
+					slotNo = 1;
+				} else if (cart.getProduct2Id() == 0) {
+					slotNo = 2;
+				} else if (cart.getProduct3Id() == 0) {
+					slotNo = 3;
+				}
+			}
+		return slotNo;
 	}
 
 	@Override
@@ -183,5 +250,4 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO{
 		return null;
 	}
 
-	
 }

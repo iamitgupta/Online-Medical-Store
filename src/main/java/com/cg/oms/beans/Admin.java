@@ -25,14 +25,15 @@ public class Admin {
 
 	@Column(name = "admin_name")
 	private String admiName;
+	
+	@Lob
+	private byte[] profilePic;
 
 	private String password;
 	private String email;
 	private long contact;
 
-	// for images
-	@Lob
-	private byte[] profilePic;
+	
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "admin_id")

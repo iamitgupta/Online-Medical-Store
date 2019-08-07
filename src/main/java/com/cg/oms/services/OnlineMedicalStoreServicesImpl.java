@@ -128,8 +128,8 @@ public class OnlineMedicalStoreServicesImpl  implements OnlineMedicalStoreServic
 	}
 
 	@Override
-	public Cart addToCart(int productId, int customerId) {
-		return dao.addToCart(productId, customerId);
+	public Cart addToCart(int productId,int productCount, int customerId) {
+		return dao.addToCart(productId, productCount,customerId);
 	}
 
 	@Override

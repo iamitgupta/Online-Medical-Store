@@ -39,7 +39,7 @@ public interface OnlineMedicalStoreServices {
 		//Orders and Bill 
 		public Order placeOrder(Cart cart);
 		public Boolean cancelOrder(int orderId,int customerId);
-		public Cart addToCart(int productId, int customerId);
+		public Cart addToCart(int productId,int productCount, int customerId);
 		public Cart removeFromCart(int productId,int customerId);
 		public Cart displayCart(int customerId);
 		
