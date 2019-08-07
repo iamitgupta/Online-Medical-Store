@@ -2,6 +2,14 @@ package com.cg.oms.dao;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Repository;
+
 import com.cg.oms.beans.Admin;
 import com.cg.oms.beans.AdminMessage;
 import com.cg.oms.beans.Cart;
@@ -10,16 +18,19 @@ import com.cg.oms.beans.CustomerAddress;
 import com.cg.oms.beans.CustomerMessage;
 import com.cg.oms.beans.Order;
 import com.cg.oms.beans.Product;
-import com.cg.oms.services.OnlineMedicalStoreServices;
-import com.cg.oms.services.OnlineMedicalStoreServicesImpl;
-
-
-
+@Transactional
+@Repository
 public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO{
+	
+	public static final EntityManagerFactory emf=
+			Persistence.createEntityManagerFactory("MySQLUnit");
 
 	@Override
 	public Boolean registerCustomer(Customer customer) {
-		// TODO Auto-generated method stub
+		EntityManager em =  emf.createEntityManager();
+		em.getTransaction().begin();
+		em.persist(customer);
+		em.getTransaction().commit();
 		return null;
 	}
 
@@ -127,7 +138,6 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO{
 
 	@Override
 	public Cart addToCart(int productId, int customerId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

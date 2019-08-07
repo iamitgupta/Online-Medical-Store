@@ -11,6 +11,8 @@ public class OnlineMedicalStoreApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(OnlineMedicalStoreApplication.class, args);
+		
+		
 	}
 
 }

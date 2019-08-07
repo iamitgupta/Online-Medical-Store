@@ -2,6 +2,8 @@ package com.cg.oms.services;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.cg.oms.beans.Admin;
 import com.cg.oms.beans.AdminMessage;
 import com.cg.oms.beans.Card;
@@ -14,20 +16,18 @@ import com.cg.oms.beans.Product;
 import com.cg.oms.dao.OnlineMedicalStoreDAO;
 import com.cg.oms.dao.OnlineMedicalStoreDAOImpl;
 
-
+@Service
 public class OnlineMedicalStoreServicesImpl  implements OnlineMedicalStoreServices{
 
 	OnlineMedicalStoreDAO dao=new OnlineMedicalStoreDAOImpl();
 
 	@Override
 	public Boolean registerCustomer(Customer customer) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Customer loginCustomer(int customerId, String password) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
