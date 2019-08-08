@@ -19,6 +19,8 @@ import com.cg.oms.beans.CustomerAddress;
 import com.cg.oms.beans.CustomerMessage;
 import com.cg.oms.beans.Order;
 import com.cg.oms.beans.Product;
+import com.cg.oms.services.OnlineMedicalStoreServices;
+import com.cg.oms.services.OnlineMedicalStoreServicesImpl;
 
 @Transactional
 @Repository
@@ -136,6 +138,7 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 	@Override
 	public Cart addToCart(int productId,int productCount, int customerId) {
 		// search if the user's cart already exists
+		OnlineMedicalStoreServices service=new OnlineMedicalStoreServicesImpl();
 		Cart cart = null;
 		int slotNo = getCartAvailability(customerId);
 		try {
@@ -158,6 +161,8 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 					cart.setProduct3Count(0);
 				}
 			}
+			//TO-DO
+		//	cart.setTotal_price(service.calculatePrice(cart));
 			em.getTransaction().commit();
 			em.close();
 		} catch (Exception e) {
@@ -173,6 +178,8 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 				cart.setProduct1Id(productId);
 				cart.setProduct2Id(0);
 				cart.setProduct2Id(0);
+				//TO-DO
+				//	cart.setTotal_price(service.calculatePrice(cart));
 				em.persist(cart);
 				em.getTransaction().commit();
 				em.close();
