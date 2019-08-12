@@ -28,12 +28,12 @@ public class OMSApp {
 	// db name : onlinemedicalstore_db
 	// change hbm2ddl.auto value in persistence.xml file only
 	static Integer loginCustomerId = 0;
-//		@Autowired
+	// @Autowired
 	OnlineMedicalStoreServices service = new OnlineMedicalStoreServicesImpl();
 	AnnotationConfigApplicationContext userctx = new AnnotationConfigApplicationContext(Customer.class);
 
-
-	// Customer API ************************************************************************
+	// Customer API
+	// ************************************************************************
 	@RequestMapping(value = "/customer/registerCustomer", method = RequestMethod.POST)
 	public Boolean registerCustomer(@RequestBody Customer customer) {
 		System.out.println(customer);
@@ -76,6 +76,13 @@ public class OMSApp {
 		}
 	}
 
+	// delete customer by Admin
+	@RequestMapping(value = "/customer/deleteCustomer", method = RequestMethod.DELETE)
+	public Boolean deleteCustomer(@RequestBody Customer customer) {
+		return service.deleteProduct(customer.getCustomerId());
+
+	}
+
 	@RequestMapping(value = "/customer/updateCustomer", method = RequestMethod.PUT)
 	public Boolean updateCustomer(@RequestBody Customer customer) {
 		customer.setCustomerId(customer.getCustomerId());
@@ -110,7 +117,7 @@ public class OMSApp {
 		}
 	}
 
-	// update address of user
+	// update address of Customer
 	@RequestMapping(value = "/customer/updateAddress", method = RequestMethod.PUT)
 
 	public Boolean updateAddress(@RequestBody CustomerAddress customerAddress) {
@@ -156,20 +163,22 @@ public class OMSApp {
 			return false;
 		}
 	}
-	//get msg from Admin
-	
+	// get msg from Admin
+
 	@RequestMapping(value = "/customer/getMessage", method = RequestMethod.POST)
 	public List<AdminMessage> getMessage(@RequestBody CustomerMessage message) {
 		return service.getAdminMSG(message.getCustomerId());
 	}
-	
 
-	// Admin API ****************************************************************************************************************************
+	// Admin API
+	// ****************************************************************************************************************************
+	// get all customer List
 	@RequestMapping(value = "/admin/getAllCustomers", method = RequestMethod.GET)
 	public List<Customer> getCustomers() {
-		return service.getAllCustomer(); 
+		return service.getAllCustomer();
 	}
-//admin login
+
+	// admin login
 	@RequestMapping(value = "/admin/adminLogin", method = RequestMethod.POST)
 	public Admin adminLogin(@RequestBody Admin admin) {
 
@@ -182,7 +191,8 @@ public class OMSApp {
 		}
 		return null;
 	}
-//search customer by id
+
+	// search customer by id
 	@RequestMapping(value = "/customer/searchCustomer", method = RequestMethod.GET)
 	public Customer searchCustomer(@RequestBody Customer customer) {
 		Customer searchCustomer = service.searchCustomer(customer.getCustomerId());
@@ -193,7 +203,13 @@ public class OMSApp {
 		}
 		return null;
 	}
-	
+
+	// delete customer by Admin
+	@RequestMapping(value = "/admin/deleteCustomer", method = RequestMethod.DELETE)
+	public Boolean deleteCustomerAdmin(@RequestBody Customer customer) {
+		return service.deleteProduct(customer.getCustomerId());
+
+	}
 
 	// Create Product
 	@RequestMapping(value = "/admin/addproduct", method = RequestMethod.POST)
@@ -209,7 +225,8 @@ public class OMSApp {
 		return product;
 
 	}
-//delete product
+
+	// delete product
 	@RequestMapping(value = "/admin/deleteProduct", method = RequestMethod.DELETE)
 	public Boolean deleteProduct(@RequestBody Product inputProduct) {
 		return service.deleteProduct(inputProduct.getProductId());
@@ -224,7 +241,7 @@ public class OMSApp {
 		return productList;
 	}
 
-	//update product
+	// update product
 	@RequestMapping(value = "/admin/updateProduct", method = RequestMethod.PUT)
 	public Product updateProduct(@RequestBody Product inputproduct) {
 		Product product = service.updateProduct(inputproduct);
@@ -237,16 +254,16 @@ public class OMSApp {
 		return service.getCustomerMSG();
 
 	}
-	
-	//send msg to user
-		@RequestMapping(value = "/admin/sendMessage", method = RequestMethod.POST)
-		public Boolean sendMessageToCustomer(@RequestBody AdminMessage message) {
-			message.setMessageDate(new java.util.Date());
-			if (service.sendMessageToCustomer(message)) {
-				return true;
-			} else {
-				return false;
-			}
+
+	// send msg to user
+	@RequestMapping(value = "/admin/sendMessage", method = RequestMethod.POST)
+	public Boolean sendMessageToCustomer(@RequestBody AdminMessage message) {
+		message.setMessageDate(new java.util.Date());
+		if (service.sendMessageToCustomer(message)) {
+			return true;
+		} else {
+			return false;
 		}
+	}
 
 }
