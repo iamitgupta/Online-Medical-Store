@@ -31,7 +31,9 @@ public class Product {
 	private int quantity;
 	private double price;
 	private String description;
-	private String search_keyword;
+	
+	@Column(name="search_keyword")
+	private String searchKeyword;
 	
 	//for product images
 	@Lob
@@ -47,9 +49,18 @@ public class Product {
 	private List<Order> order; 
 	
 	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="product_id")
-	private List<Cart> cart;
+	@JoinColumn(name="product1_id")
+	private List<Cart> cart1;
 
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinColumn(name="product2_id")
+	private List<Cart> cart2;
+
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinColumn(name="product3_id")
+	private List<Cart> cart3;
+
+	
 	public int getProductId() {
 		return productId;
 	}
@@ -98,14 +109,7 @@ public class Product {
 		this.description = description;
 	}
 
-	public String getSearch_keyword() {
-		return search_keyword;
-	}
-
-	public void setSearch_keyword(String search_keyword) {
-		this.search_keyword = search_keyword;
-	}
-
+	
 	public byte[] getImage1() {
 		return image1;
 	}
@@ -138,20 +142,47 @@ public class Product {
 		this.order = order;
 	}
 
-	public List<Cart> getCart() {
-		return cart;
+	public List<Cart> getCart1() {
+		return cart1;
 	}
 
-	public void setCart(List<Cart> cart) {
-		this.cart = cart;
+	public void setCart1(List<Cart> cart1) {
+		this.cart1 = cart1;
+	}
+
+	public List<Cart> getCart2() {
+		return cart2;
+	}
+
+	public void setCart2(List<Cart> cart2) {
+		this.cart2 = cart2;
+	}
+
+	public List<Cart> getCart3() {
+		return cart3;
+	}
+
+	public void setCart3(List<Cart> cart3) {
+		this.cart3 = cart3;
+	}
+
+	public String getSearchKeyword() {
+		return searchKeyword;
+	}
+
+	public void setSearchKeyword(String searchKeyword) {
+		this.searchKeyword = searchKeyword;
 	}
 
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", productName=" + productName + ", category=" + category
-				+ ", quantity=" + quantity + ", price=" + price + ", description=" + description + ", search_keyword="
-				+ search_keyword + ", image1=" + Arrays.toString(image1) + ", image2=" + Arrays.toString(image2)
-				+ ", image3=" + Arrays.toString(image3) + ", order=" + order + ", cart=" + cart + "]";
-	} 
+				+ ", quantity=" + quantity + ", price=" + price + ", description=" + description + ", searchKeyword="
+				+ searchKeyword + ", image1=" + Arrays.toString(image1) + ", image2=" + Arrays.toString(image2)
+				+ ", image3=" + Arrays.toString(image3) + ", order=" + order + ", cart1=" + cart1 + ", cart2=" + cart2
+				+ ", cart3=" + cart3 + "]";
+	}
+
+		
 	
 }

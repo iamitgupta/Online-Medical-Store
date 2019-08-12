@@ -20,7 +20,7 @@ public interface OnlineMedicalStoreDAO {
 	public Boolean deleteCustomer(int customerId);
 	public Boolean updatePassword(int customerId,String oldPassword,String newPassword);
 	public Boolean addAddress(CustomerAddress address);
-	public CustomerAddress updateAddress(CustomerAddress address);
+	public Boolean updateAddress(CustomerAddress address);
 	
 	//Admin
 	public Admin adminLogin(int adminId,String password);
@@ -34,7 +34,7 @@ public interface OnlineMedicalStoreDAO {
 	public Product updateProduct(Product product);
 	public Boolean deleteProduct(int productId);
 	public Product searchProduct(int productId);
-	public List<Product> searchProduct(String productName);
+	public List<Product> searchProduct(String keyword);
 	
 	//Orders and Bill 
 	public Order placeOrder(Cart cart);

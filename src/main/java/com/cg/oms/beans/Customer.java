@@ -12,6 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,9 @@ public class Customer {
 	private int customerId;
 	private String email;
 	private String password;
+	
+	@Transient
+	private String newPassword;
 
 	@Column(name = "customer_name")
 	private String customerName;
@@ -50,7 +54,7 @@ public class Customer {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "customer_id")
 	private Cart cart;
-
+	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "customer_id")
 	private List<Order> order;
@@ -171,17 +175,23 @@ public class Customer {
 		this.customer_message = customer_message;
 	}
 
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+
 	@Override
 	public String toString() {
-		return "Customer [customerId=" + customerId + ", email=" + email + ", password=" + password + ", customerName="
-				+ customerName + ", age=" + age + ", profilePic=" + Arrays.toString(profilePic) + ", addressId="
-				+ addressId + ", contact=" + contact + ", gender=" + gender + ", walletBalance=" + walletBalance
-				+ ", customerAddress=" + customerAddress + ", cart=" + cart + ", order=" + order + ", customer_message="
-				+ customer_message + "]";
+		return "Customer [customerId=" + customerId + ", email=" + email + ", password=" + password + ", newPassword="
+				+ newPassword + ", customerName=" + customerName + ", age=" + age + ", profilePic="
+				+ Arrays.toString(profilePic) + ", addressId=" + addressId + ", contact=" + contact + ", gender="
+				+ gender + ", walletBalance=" + walletBalance + ", customerAddress=" + customerAddress + ", cart="
+				+ cart + ", order=" + order + ", customer_message=" + customer_message + "]";
 	}
 	
-	
-	
-	
+
 
 }
