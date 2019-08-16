@@ -39,12 +39,15 @@ public interface OnlineMedicalStoreDAO {
 	//Orders and Bill 
 	public Order placeOrder(Cart cart);
 	public Boolean cancelOrder(int orderId,int customerId);
-	public Cart addToCart(int productId,int productCount, int customerId);
+	public Cart addToCart(int productId,int customerId);
 	public Cart removeFromCart(int productId,int customerId);
 	public Cart displayCart(int customerId);
 	public Integer getCartAvailability(int customerId);
 
+	public Cart updateCart(Cart cart);
 	
+	public List<Order> displayOrder(int customerId);
+
 	//payment
 	
 	//Helpdesk

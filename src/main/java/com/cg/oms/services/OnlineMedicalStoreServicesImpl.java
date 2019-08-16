@@ -23,9 +23,9 @@ import com.cg.oms.dao.OnlineMedicalStoreDAO;
 import com.cg.oms.dao.OnlineMedicalStoreDAOImpl;
 
 @Service
-public class OnlineMedicalStoreServicesImpl  implements OnlineMedicalStoreServices{
+public class OnlineMedicalStoreServicesImpl implements OnlineMedicalStoreServices {
 
-	OnlineMedicalStoreDAO dao=new OnlineMedicalStoreDAOImpl();
+	OnlineMedicalStoreDAO dao = new OnlineMedicalStoreDAOImpl();
 
 	@Override
 	public Boolean registerCustomer(Customer customer) {
@@ -104,17 +104,17 @@ public class OnlineMedicalStoreServicesImpl  implements OnlineMedicalStoreServic
 
 	@Override
 	public List<Product> searchProduct(String keyword) {
-		List<Product> actualProduct=new ArrayList<Product>();
-		
-		 List<Product>	productList= dao.searchProduct(keyword);
-		if(productList.size()>0) {
-			for(Product product : productList) {
-				if(product.getSearchKeyword().contains(keyword)) {
+		List<Product> actualProduct = new ArrayList<Product>();
+
+		List<Product> productList = dao.searchProduct(keyword);
+		if (productList.size() > 0) {
+			for (Product product : productList) {
+				if (product.getSearchKeyword().contains(keyword)) {
 					actualProduct.add(product);
 				}
 			}
 		}
-		
+
 		return actualProduct;
 	}
 
@@ -129,8 +129,8 @@ public class OnlineMedicalStoreServicesImpl  implements OnlineMedicalStoreServic
 	}
 
 	@Override
-	public Cart addToCart(int productId,int productCount, int customerId) {
-		return dao.addToCart(productId, productCount,customerId);
+	public Cart addToCart(int productId, int customerId) {
+		return dao.addToCart(productId, customerId);
 	}
 
 	@Override
@@ -166,50 +166,51 @@ public class OnlineMedicalStoreServicesImpl  implements OnlineMedicalStoreServic
 	@Override
 	public Boolean validateCard(Card card) {
 		String cardNumber = card.getCard_number();
-		Pattern pattern = Pattern.compile("\\d{4}\\-\\d{4}\\-\\d{4}\\-\\d{4}"); //Pattern matching for 16 digits.
+		Pattern pattern = Pattern.compile("\\d{4}\\-\\d{4}\\-\\d{4}\\-\\d{4}"); // Pattern matching for 16 digits.
 		Matcher matcher = pattern.matcher(cardNumber);
 		if (matcher.matches()) {
 			String cvvNumber = Integer.toString(card.getCvv_number());
-			Pattern pattern1 = Pattern.compile("\\d{3}"); //Pattern Matching for cvv.
+			Pattern pattern1 = Pattern.compile("\\d{3}"); // Pattern Matching for cvv.
 			Matcher matcher1 = pattern1.matcher(cvvNumber);
 			if (matcher1.matches()) {
 				Date date = card.getExpiry_date();
 				DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 				String stringdate = dateformat.format(date);
-				
-				String month =stringdate.substring(5,7);
-				String year = stringdate.substring(0,4);
-				
-				System.out.println(month+" "+year+".............");
+
+				String month = stringdate.substring(5, 7);
+				String year = stringdate.substring(0, 4);
+
+				System.out.println(month + " " + year + ".............");
 				boolean validMonth = validateMonth(Integer.parseInt(month));
 				boolean validYear = validateYear(Integer.parseInt(year));
-				
-				if(validMonth && validYear) {
-					Date currentDate=new Date();
-					if(card.getExpiry_date().after(currentDate))
+
+				if (validMonth && validYear) {
+					Date currentDate = new Date();
+					if (card.getExpiry_date().after(currentDate))
 						return true;
-					
+
 				}
 			}
 
 		}
 		return false;
-			}
+	}
 
 	@Override
 	public Double calculatePrice(Cart cart) {
 		double price = 0;
-		if(cart.getProduct1Id() != 0) {
-			price += searchProduct(cart.getProduct1Id()).getPrice()*cart.getProduct1Count();
+		if (cart.getProduct1Id() != 0) {
+			price += searchProduct(cart.getProduct1Id()).getPrice() * cart.getProduct1Count();
 		}
-		if(cart.getProduct2Id()!=0) {
-				price += searchProduct(cart.getProduct2Id()).getPrice()*cart.getProduct2Count();
+		if (cart.getProduct2Id() != 0) {
+			price += searchProduct(cart.getProduct2Id()).getPrice() * cart.getProduct2Count();
 		}
-		if(cart.getProduct3Id()!=0) {
-					price += searchProduct(cart.getProduct3Id()).getPrice()*cart.getProduct3Count();
+		if (cart.getProduct3Id() != 0) {
+			price += searchProduct(cart.getProduct3Id()).getPrice() * cart.getProduct3Count();
 		}
 		return price;
-			}
+	}
+
 	@Override
 	public Boolean validateMonth(int month) {
 		// TODO Auto-generated method stub
@@ -220,5 +221,15 @@ public class OnlineMedicalStoreServicesImpl  implements OnlineMedicalStoreServic
 	public Boolean validateYear(int year) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Cart updateCart(Cart cart) {
+		return dao.updateCart(cart);
+	}
+
+	@Override
+	public List<Order> displayOrder(int customerId) {
+		return dao.displayOrder(customerId);
 	}
 }

@@ -44,6 +44,18 @@ public class Cart {
 	
 	
 	private double total_price;
+	
+	private boolean active;
+
+
+	public boolean isActive() {
+		return active;
+	}
+
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 
 
 	public int getCartId() {
@@ -141,10 +153,6 @@ public class Cart {
 		return "Cart [cartId=" + cartId + ", customerId=" + customerId + ", product1Id=" + product1Id
 				+ ", product1Count=" + product1Count + ", product2Id=" + product2Id + ", product2Count=" + product2Count
 				+ ", product3Id=" + product3Id + ", product3Count=" + product3Count + ", total_price=" + total_price
-				+ "]";
+				+ ", active=" + active + "]";
 	}
-
-	
-	
-	
 }

@@ -38,8 +38,8 @@ public class Customer {
 	@Lob
 	private byte[] profilePic;
 
-	@Column(name = "address_id")
-	private int addressId;
+//	@Column(name = "address_id")
+//	private int addressId;
 
 	private long contact;
 	private String gender;
@@ -49,7 +49,7 @@ public class Customer {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "customer_id")
-	private List<CustomerAddress> customerAddress;
+	private List<CustomerAddress> address;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "customer_id")
@@ -62,7 +62,7 @@ public class Customer {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "customer_id")
 	private List<CustomerMessage> customer_message;
-
+//
 	public int getCustomerId() {
 		return customerId;
 	}
@@ -111,13 +111,13 @@ public class Customer {
 		this.profilePic = profilePic;
 	}
 
-	public int getAddressId() {
-		return addressId;
-	}
-
-	public void setAddressId(int addressId) {
-		this.addressId = addressId;
-	}
+//	public int getAddressId() {
+//		return addressId;
+//	}
+//
+//	public void setAddressId(int addressId) {
+//		this.addressId = addressId;
+//	}
 
 	public long getContact() {
 		return contact;
@@ -144,11 +144,11 @@ public class Customer {
 	}
 
 	public List<CustomerAddress> getCustomerAddress() {
-		return customerAddress;
+		return address;
 	}
 
 	public void setCustomerAddress(List<CustomerAddress> customerAddress) {
-		this.customerAddress = customerAddress;
+		this.address = customerAddress;
 	}
 
 	public Cart getCart() {
@@ -187,8 +187,8 @@ public class Customer {
 	public String toString() {
 		return "Customer [customerId=" + customerId + ", email=" + email + ", password=" + password + ", newPassword="
 				+ newPassword + ", customerName=" + customerName + ", age=" + age + ", profilePic="
-				+ Arrays.toString(profilePic) + ", addressId=" + addressId + ", contact=" + contact + ", gender="
-				+ gender + ", walletBalance=" + walletBalance + ", customerAddress=" + customerAddress + ", cart="
+				+ Arrays.toString(profilePic) + ", contact=" + contact + ", gender="
+				+ gender + ", walletBalance=" + walletBalance + ", customerAddress=" + address + ", cart="
 				+ cart + ", order=" + order + ", customer_message=" + customer_message + "]";
 	}
 	

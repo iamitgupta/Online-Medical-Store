@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,20 +46,21 @@ public class OMSApp {
 		}
 	}
 
-	// Remove From cart
-	@RequestMapping(value = "/customer/removeFromCart", method = RequestMethod.PUT)
-	public Cart removeFromCart(@RequestBody Cart inputCart) {
-		return service.removeFromCart(inputCart.getProduct1Id(), inputCart.getCustomerId());
+	// cancel order
+	@RequestMapping(value = "/order/cancelOrder/{orderId}/{customerId}", method = RequestMethod.DELETE)
+	public Boolean cancelOrder(@PathVariable("orderId") int orderId, @PathVariable("customerId") int customerId) {
+		return service.cancelOrder(orderId, customerId);
 	}
 
-	@RequestMapping(value = "/order/cancelOrder", method = RequestMethod.DELETE)
-	public Boolean cancelOrder(@RequestBody Order order) {
-		return service.cancelOrder(order.getOrderId(), order.getCustomerId());
+	// display order
+	@RequestMapping(value = "/order/displayOrder/{customerId}", method = RequestMethod.DELETE)
+	public List<Order> displayOrder(@PathVariable("customerId") int customerId) {
+		return service.displayOrder(customerId);
 	}
 
-	@RequestMapping(value = "/cart/displayCart", method = RequestMethod.GET)
-	public Cart displayCart(@RequestBody Cart inputCart) {
-		return service.displayCart(inputCart.getCustomerId());
+	@RequestMapping(value = "/cart/displayCart/{customerId}", method = RequestMethod.GET)
+	public Cart displayCart(@PathVariable("customerId") int customerId) {
+		return service.displayCart(customerId);
 	}
 
 	@RequestMapping(value = "/customer/placeOrder", method = RequestMethod.POST)
@@ -70,6 +72,7 @@ public class OMSApp {
 	@RequestMapping(value = "/customer/loginCustomer", method = RequestMethod.POST)
 	public Customer loginCustomer(@RequestBody Customer customer) {
 		Customer loginCustomer = service.loginCustomer(customer.getCustomerId(), customer.getPassword());
+		System.out.println(customer);
 		if (loginCustomer != null) {
 			return loginCustomer;
 		} else {
@@ -77,10 +80,10 @@ public class OMSApp {
 		}
 	}
 
-	// delete customer by Admin
-	@RequestMapping(value = "/customer/deleteCustomer", method = RequestMethod.DELETE)
-	public Boolean deleteCustomer(@RequestBody Customer customer) {
-		return service.deleteProduct(customer.getCustomerId());
+	// delete customer
+	@RequestMapping(value = "/customer/deleteCustomer/{customerId}", method = RequestMethod.DELETE)
+	public Boolean deleteCustomer(@PathVariable("customerId") int customerId) {
+		return service.deleteProduct(customerId);
 
 	}
 
@@ -133,10 +136,23 @@ public class OMSApp {
 	}
 
 	// Add to cart
-	@RequestMapping(value = "/customer/addToCart", method = RequestMethod.POST)
-	public Cart createEmployee(@RequestBody Cart inputCart) {
-		Cart cart = service.addToCart(inputCart.getProduct1Id(), inputCart.getProduct1Count(),
-				inputCart.getCustomerId());
+	@RequestMapping(value = "/customer/addToCart/{productId}/{customerId}", method = RequestMethod.GET)
+	public Cart addToCart(@PathVariable("productId") int productId, @PathVariable("customerId") int customerId) {
+		Cart cart = service.addToCart(productId, customerId);
+		return cart;
+	}
+
+	// update cart
+	@RequestMapping(value = "/customer/updateCart", method = RequestMethod.GET)
+	public Cart updateCart(@RequestBody Cart cart) {
+		Cart tempcart = service.updateCart(cart);
+		return tempcart;
+	}
+
+	// Remove from cart
+	@RequestMapping(value = "/customer/removeFromCart/{productId}/{customerId}", method = RequestMethod.GET)
+	public Cart removeFromCart(@PathVariable("productId") int productId, @PathVariable("customerId") int customerId) {
+		Cart cart = service.removeFromCart(productId, customerId);
 		return cart;
 	}
 
@@ -206,9 +222,9 @@ public class OMSApp {
 	}
 
 	// delete customer by Admin
-	@RequestMapping(value = "/admin/deleteCustomer", method = RequestMethod.DELETE)
-	public Boolean deleteCustomerAdmin(@RequestBody Customer customer) {
-		return service.deleteProduct(customer.getCustomerId());
+	@RequestMapping(value = "/admin/deleteCustomer/{customerId}", method = RequestMethod.DELETE)
+	public Boolean deleteCustomerAdmin(@PathVariable("customerId") int customerId) {
+		return service.deleteProduct(customerId);
 
 	}
 
@@ -228,9 +244,9 @@ public class OMSApp {
 	}
 
 	// delete product
-	@RequestMapping(value = "/admin/deleteProduct", method = RequestMethod.DELETE)
-	public Boolean deleteProduct(@RequestBody Product inputProduct) {
-		return service.deleteProduct(inputProduct.getProductId());
+	@RequestMapping(value = "/admin/deleteProduct/{productId}", method = RequestMethod.DELETE)
+	public Boolean deleteProduct(@PathVariable("productId") int productId) {
+		return service.deleteProduct(productId);
 
 	}
 

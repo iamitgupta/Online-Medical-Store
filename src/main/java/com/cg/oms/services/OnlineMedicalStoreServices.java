@@ -54,11 +54,16 @@ public interface OnlineMedicalStoreServices {
 
 	public Boolean cancelOrder(int orderId, int customerId);
 
-	public Cart addToCart(int productId, int productCount, int customerId);
+	public Cart addToCart(int productId,int customerId);
+	
+	public Cart updateCart(Cart cart);
 
 	public Cart removeFromCart(int productId, int customerId);
 
 	public Cart displayCart(int customerId);
+	
+	public List<Order> displayOrder(int customerId);
+	
 
 	// payment
 	public Boolean validateCard(Card card);

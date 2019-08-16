@@ -44,9 +44,9 @@ public class Product {
 	private byte[] image3;
 	
 	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="product_id")
-	private List<Order> order; 
+//	@OneToMany(cascade=CascadeType.ALL)
+//	@JoinColumn(name="product_id")
+//	private List<Order> order; 
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="product1_id")
@@ -134,13 +134,13 @@ public class Product {
 		this.image3 = image3;
 	}
 
-	public List<Order> getOrder() {
-		return order;
-	}
-
-	public void setOrder(List<Order> order) {
-		this.order = order;
-	}
+//	public List<Order> getOrder() {
+//		return order;
+//	}
+//
+//	public void setOrder(List<Order> order) {
+//		this.order = order;
+//	}
 
 	public List<Cart> getCart1() {
 		return cart1;
@@ -179,7 +179,7 @@ public class Product {
 		return "Product [productId=" + productId + ", productName=" + productName + ", category=" + category
 				+ ", quantity=" + quantity + ", price=" + price + ", description=" + description + ", searchKeyword="
 				+ searchKeyword + ", image1=" + Arrays.toString(image1) + ", image2=" + Arrays.toString(image2)
-				+ ", image3=" + Arrays.toString(image3) + ", order=" + order + ", cart1=" + cart1 + ", cart2=" + cart2
+				+ ", image3=" + Arrays.toString(image3) + ", cart1=" + cart1 + ", cart2=" + cart2
 				+ ", cart3=" + cart3 + "]";
 	}
 

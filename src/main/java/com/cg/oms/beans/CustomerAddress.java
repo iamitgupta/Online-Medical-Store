@@ -24,7 +24,7 @@ public class CustomerAddress {
 	private int pincode;
 	private String state;
 	
-	@Column(name="customer_id",unique = true)
+	@Column(name="customer_id")
 	private int customerId;
 
 	public int getAddressId() {
