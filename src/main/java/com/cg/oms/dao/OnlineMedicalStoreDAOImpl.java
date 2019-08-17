@@ -19,6 +19,7 @@ import com.cg.oms.beans.Customer;
 import com.cg.oms.beans.CustomerAddress;
 import com.cg.oms.beans.CustomerMessage;
 import com.cg.oms.beans.Order;
+import com.cg.oms.beans.OrderInfo;
 import com.cg.oms.beans.Product;
 import com.cg.oms.services.OnlineMedicalStoreServices;
 import com.cg.oms.services.OnlineMedicalStoreServicesImpl;
@@ -198,41 +199,50 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 
 	@Override
 	public Admin adminLogin(int adminId, String password) {
-		Admin admin = null;
 		try {
+			System.out.println(adminId);
+			System.out.println(password);
 			EntityManager em = emf.createEntityManager();
 			TypedQuery<Admin> query = em.createQuery("from Admin a where a.adminId= :id and a.password= :passwd",
 					Admin.class);
 			query.setParameter("id", adminId);
 			query.setParameter("passwd", password);
 			List<Admin> admin1 = query.getResultList();
-			if (admin1.size() > 0)
-				admin = admin1.get(0);
-			em.close();
-
+			System.out.println(admin1);
+			if (admin1.get(0) != null) {
+				Admin admin = admin1.get(0);
+				em.close();
+				return admin;
+			}
 		} catch (Exception e) {
 		}
-		return admin;
+		return null;
 	}
 
 	@Override
 	public List<Customer> getAllCustomer() {
 		EntityManager em = emf.createEntityManager();
 		TypedQuery<Customer> query = em.createQuery("Select c from Customer c", Customer.class);
-		return query.getResultList();
+		List<Customer> customers = query.getResultList();
+		if (customers != null) {
+			return customers;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public Customer searchCustomer(int customerId) {
 		try {
-			EntityManager em = emf.createEntityManager();
-			Customer customer = em.find(Customer.class, customerId);
+			EntityManager em=emf.createEntityManager();
+			Customer customer = em.find(Customer.class,customerId);
+			System.out.println(customer);
 			em.close();
 			return customer;
-		} catch (Exception e) {
 
-		}
-		return null;
+		} catch (Exception e) {
+			
+		}return null;
 	}
 
 	@Override
@@ -325,18 +335,27 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 	}
 
 	@Override
-	public Order placeOrder(Cart cart) {
-		Order order = new Order();
-		order.setCartId(cart.getCartId());
-		order.setCustomerId(cart.getCustomerId());
-		order.setTotalPrice(cart.getTotal_price());
-		try {
+	public Order placeOrder(int cartId) {
+		OnlineMedicalStoreServices service = new OnlineMedicalStoreServicesImpl();
+		
+	
+				try {
+					Order order = new Order();
 			EntityManager em = emf.createEntityManager();
+			Cart cart=em.find(Cart.class, cartId);
+			order.setCartId(cartId);
+			order.setCustomerId(cart.getCustomerId());
+			order.setTotalPrice(cart.getTotal_price());
+
 			cart.setCustomerId(cart.getCustomerId());
 			em.getTransaction().begin();
 			em.persist(order);
 			order.setTotalPrice(cart.getTotal_price());
-
+			System.out.println(order+"orderrrrrrrrrrrr");
+			System.out.println(cart+"............");
+			System.out.println(service.calculatePrice(cart));
+			
+			
 			// after placing order reset customer cart
 			Cart orderedCart = em.find(Cart.class, cart.getCartId());
 			orderedCart.setActive(false);
@@ -355,8 +374,11 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 	public Boolean cancelOrder(int orderId, int customerId) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		TypedQuery<Order> query = em
-				.createQuery("Delete from Order o where o.orderId=:orderId and o.customerId=:customerId", Order.class);
+		Order order = em.find(Order.class, orderId);
+		Cart cart = em.find(Cart.class, order.getCartId());
+		em.remove(cart);
+		javax.persistence.Query query = em
+				.createQuery("Delete from Order o where o.orderId=:orderId and o.customerId=:customerId");
 		query.setParameter("orderId", orderId);
 		query.setParameter("customerId", customerId);
 		int a = query.executeUpdate();
@@ -377,23 +399,27 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 		try {
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			TypedQuery<Cart> query = em.createQuery("from Cart c where customerId= :cId", Cart.class);
+			TypedQuery<Cart> query = em.createQuery("from Cart c where customerId= :cId and active=true", Cart.class);
 			query.setParameter("cId", customerId);
 			List<Cart> cartList = query.getResultList();
 			if (cartList.size() > 0) {
 				cart = cartList.get(0);
+				cart.setProduct1Count(1);
 				if (slotNo == 1) {
 					cart.setProduct1Id(productId);
-					cart.setProduct1Count(1);
+					//cart.setProduct1Count(1);
 				} else if (slotNo == 2) {
 					cart.setProduct2Id(productId);
 					cart.setProduct2Count(1);
 				} else if (slotNo == 3) {
-					cart.setProduct2Id(productId);
+					cart.setProduct3Id(productId);
 					cart.setProduct3Count(1);
 				}
+				cart.setProduct1Count(1);
+				cart.setTotal_price(service.calculatePrice(cart));
+				System.out.println(cart+"----------------------------");
 			}
-			cart.setTotal_price(service.calculatePrice(cart));
+			
 			em.getTransaction().commit();
 			em.close();
 		} catch (Exception e) {
@@ -407,8 +433,10 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 				em.getTransaction().begin();
 				cart.setCustomerId(customerId);
 				cart.setProduct1Id(productId);
+				cart.setActive(true);
 				cart.setProduct2Id(0);
-				cart.setProduct2Id(0);
+				cart.setProduct3Id(0);
+				cart.setTotal_price(service.calculatePrice(cart));
 				// TO-DO
 				// cart.setTotal_price(service.calculatePrice(cart));
 				em.persist(cart);
@@ -426,6 +454,7 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 		Cart cart = null;
 		try {
 			EntityManager em = emf.createEntityManager();
+			OnlineMedicalStoreServices service = new OnlineMedicalStoreServicesImpl();
 			em.getTransaction().begin();
 			TypedQuery<Cart> query = em.createQuery("From Cart where customerId = :id", Cart.class);
 			query.setParameter("id", customerId);
@@ -434,12 +463,15 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 				cart = cartList.get(0);
 				if (productId == cart.getProduct1Id()) {
 					cart.setProduct1Id(0);
-
+					cart.setProduct1Count(0);
 				} else if (productId == cart.getProduct2Id()) {
 					cart.setProduct2Id(0);
+					cart.setProduct2Count(0);
 				} else if (productId == cart.getProduct3Id()) {
 					cart.setProduct3Id(0);
+					cart.setProduct3Count(0);
 				}
+				cart.setTotal_price(service.calculatePrice(cart));
 			}
 			em.getTransaction().commit();
 
@@ -598,11 +630,43 @@ public class OnlineMedicalStoreDAOImpl implements OnlineMedicalStoreDAO {
 	}
 
 	@Override
-	public List<Order> displayOrder(int customerId) {
+	public List<OrderInfo> displayOrder(int customerId) {
+		
 		EntityManager em = emf.createEntityManager();
-		TypedQuery<Order> query = em.createNamedQuery("from Order where customerId=:cId", Order.class);
+		TypedQuery<Order> query = em.createQuery("From Order where customerId= :cId", Order.class);
 		query.setParameter("cId", customerId);
-		return query.getResultList();
+		
+		List<OrderInfo> orderList = new ArrayList<OrderInfo>();
+		List<Order> orders = query.getResultList();
+		System.out.println(orders);
+		for(Order order:orders)
+		{
+			OrderInfo orderInfo = new OrderInfo();
+			Cart cart = searchCart(order.getCartId());
+			System.out.println(cart+"-----------------------------");
+			
+			orderInfo.setOrderId(order.getOrderId());
+			orderInfo.setTotalPrice(cart.getTotal_price());
+			Product product = searchProduct(cart.getProduct1Id());
+			orderInfo.setProduct1Name(product.getProductName());
+			
+			product = searchProduct(cart.getProduct2Id());
+			orderInfo.setProduct2Name(product.getProductName());
+			
+			product = searchProduct(cart.getProduct3Id());
+			orderInfo.setProduct3Name(product.getProductName());
+			orderList.add(orderInfo);
+		}
+		return orderList;
+	}
+
+	@Override
+	public Cart searchCart(int cartId) {
+		EntityManager em = emf.createEntityManager();
+		Cart cart=em.find(Cart.class, cartId);
+		em.close();
+		System.out.println(cart);
+		return cart;
 	}
 
 }

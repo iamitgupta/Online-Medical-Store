@@ -18,6 +18,7 @@ import com.cg.oms.beans.Customer;
 import com.cg.oms.beans.CustomerAddress;
 import com.cg.oms.beans.CustomerMessage;
 import com.cg.oms.beans.Order;
+import com.cg.oms.beans.OrderInfo;
 import com.cg.oms.beans.Product;
 import com.cg.oms.dao.OnlineMedicalStoreDAO;
 import com.cg.oms.dao.OnlineMedicalStoreDAOImpl;
@@ -119,8 +120,8 @@ public class OnlineMedicalStoreServicesImpl implements OnlineMedicalStoreService
 	}
 
 	@Override
-	public Order placeOrder(Cart cart) {
-		return dao.placeOrder(cart);
+	public Order placeOrder(int cartId) {
+		return dao.placeOrder(cartId);
 	}
 
 	@Override
@@ -229,7 +230,12 @@ public class OnlineMedicalStoreServicesImpl implements OnlineMedicalStoreService
 	}
 
 	@Override
-	public List<Order> displayOrder(int customerId) {
+	public List<OrderInfo> displayOrder(int customerId) {
 		return dao.displayOrder(customerId);
+	}
+
+	@Override
+	public Cart searchCart(int cartId) {
+		return dao.searchCart(cartId);
 	}
 }

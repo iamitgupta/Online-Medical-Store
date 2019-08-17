@@ -10,6 +10,7 @@ import com.cg.oms.beans.Customer;
 import com.cg.oms.beans.CustomerAddress;
 import com.cg.oms.beans.CustomerMessage;
 import com.cg.oms.beans.Order;
+import com.cg.oms.beans.OrderInfo;
 import com.cg.oms.beans.Product;
 
 public interface OnlineMedicalStoreServices {
@@ -50,7 +51,7 @@ public interface OnlineMedicalStoreServices {
 	public List<Product> searchProduct(String keyword);
 
 	// Orders and Bill
-	public Order placeOrder(Cart cart);
+	public Order placeOrder(int cartId);
 
 	public Boolean cancelOrder(int orderId, int customerId);
 
@@ -62,7 +63,9 @@ public interface OnlineMedicalStoreServices {
 
 	public Cart displayCart(int customerId);
 	
-	public List<Order> displayOrder(int customerId);
+	public List<OrderInfo> displayOrder(int customerId);
+	
+	public Cart searchCart(int cartId);
 	
 
 	// payment
