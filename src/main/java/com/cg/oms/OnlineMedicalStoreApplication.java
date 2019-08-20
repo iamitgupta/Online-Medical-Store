@@ -12,12 +12,12 @@ import com.cg.oms.main.OMSApp;
 @SpringBootApplication
 @ComponentScan(basePackageClasses = OMSApp.class)
 public class OnlineMedicalStoreApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(OnlineMedicalStoreApplication.class, args);
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("MySQLUnit");
+		
 
 	}
-
+	
 }

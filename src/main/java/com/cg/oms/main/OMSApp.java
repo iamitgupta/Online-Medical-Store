@@ -27,16 +27,11 @@ import com.cg.oms.services.OnlineMedicalStoreServicesImpl;
 @RestController
 @CrossOrigin("http://localhost:4200")
 public class OMSApp {
-
-	// db name : onlinemedicalstore_db
-	// change hbm2ddl.auto value in persistence.xml file only
-	static Integer loginCustomerId = 0;
-	// @Autowired
+	
 	OnlineMedicalStoreServices service = new OnlineMedicalStoreServicesImpl();
 	AnnotationConfigApplicationContext userctx = new AnnotationConfigApplicationContext(Customer.class);
 
-	// Customer API
-	// ************************************************************************
+	//register customer
 	@RequestMapping(value = "/customer/registerCustomer", method = RequestMethod.POST)
 	public Boolean registerCustomer(@RequestBody Customer customer) {
 		System.out.println("Imput"+customer);
@@ -61,7 +56,8 @@ public class OMSApp {
 		
 		return orderList; 
 	}
-
+	
+	//display cart
 	@RequestMapping(value = "/cart/displayCart/{customerId}", method = RequestMethod.GET)
 	public Cart displayCart(@PathVariable("customerId") int customerId) {
 		System.out.println(customerId);
@@ -69,13 +65,15 @@ public class OMSApp {
 		System.out.println(cart);
 		return cart;
 	}
-
+	
+	//place order
 	@RequestMapping(value = "/customer/placeOrder/{cartId}", method = RequestMethod.GET)
 	public Order placeOrder(@PathVariable("cartId") int cartId) {
 		Order order = service.placeOrder(cartId);
 		return order;
 	}
-
+	
+	//customer login
 	@RequestMapping(value = "/customer/loginCustomer", method = RequestMethod.POST)
 	public Customer loginCustomer(@RequestBody Customer customer) {
 		Customer loginCustomer = service.loginCustomer(customer.getCustomerId(), customer.getPassword());
@@ -88,7 +86,6 @@ public class OMSApp {
 	}
 
 	// delete customer
-
 	@RequestMapping(value = "/customer/updateCustomer", method = RequestMethod.PUT)
 	public Boolean updateCustomer(@RequestBody Customer customer) {
 		customer.setCustomerId(customer.getCustomerId());
@@ -99,7 +96,7 @@ public class OMSApp {
 		}
 
 	}
-
+	//update password
 	@RequestMapping(value = "/customer/updatePassword", method = RequestMethod.PUT)
 
 	public Boolean updatePassword(@RequestBody Customer customer) {
@@ -111,10 +108,12 @@ public class OMSApp {
 		}
 
 	}
-
-	@RequestMapping(value = "/customer/addAddress", method = RequestMethod.POST)
-	public Boolean addAddress(@RequestBody CustomerAddress customerAddress) {
-		customerAddress.setCustomerId(loginCustomerId);
+	
+	//add address
+	@RequestMapping(value = "/customer/addAddress/{customerId}", method = RequestMethod.POST)
+	public Boolean addAddress(@RequestBody CustomerAddress customerAddress,@PathVariable("customerId") int customerId) {
+		customerAddress.setCustomerId(customerId);
+		System.out.println(customerAddress);
 
 		if (service.addAddress(customerAddress)) {
 			return true;
@@ -127,9 +126,6 @@ public class OMSApp {
 	@RequestMapping(value = "/customer/updateAddress", method = RequestMethod.PUT)
 
 	public Boolean updateAddress(@RequestBody CustomerAddress customerAddress) {
-
-		customerAddress.setCustomerId(loginCustomerId);
-		System.out.println(customerAddress);
 		if (service.updateAddress(customerAddress)) {
 			return true;
 		} else {
@@ -201,8 +197,7 @@ public class OMSApp {
 		return service.getAdminMSG(message.getCustomerId());
 	}
 
-	// Admin API
-	// ****************************************************************************************************************************
+	
 	// get all customer List
 	@RequestMapping(value = "/admin/allCustomers", method = RequestMethod.GET)
 	public List<Customer> getCustomers() {
@@ -239,7 +234,7 @@ public class OMSApp {
 		return null;
 	}
 
-	// delete customer by Admin
+	// delete customer
 	@RequestMapping(value = "/customer/deleteCustomer/{id}", method = RequestMethod.DELETE)
 	public Boolean deleteCustomer(@PathVariable("id") int customerId) {
 		if (service.deleteCustomer(customerId)) {

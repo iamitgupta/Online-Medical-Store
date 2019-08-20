@@ -199,14 +199,17 @@ public class OnlineMedicalStoreServicesImpl implements OnlineMedicalStoreService
 
 	@Override
 	public Double calculatePrice(Cart cart) {
-		double price = 0;
-		if (cart.getProduct1Id() != 0) {
+		double price=0;
+		Integer pr1 = cart.getProduct1Id();
+		Integer pr2 = cart.getProduct2Id();
+		Integer pr3 = cart.getProduct3Id();
+		if (cart.getProduct1Id() != 0 && pr1!=null) {
 			price += searchProduct(cart.getProduct1Id()).getPrice() * cart.getProduct1Count();
 		}
-		if (cart.getProduct2Id() != 0) {
+		if (cart.getProduct2Id() != 0 && pr2!=null) {
 			price += searchProduct(cart.getProduct2Id()).getPrice() * cart.getProduct2Count();
 		}
-		if (cart.getProduct3Id() != 0) {
+		if (cart.getProduct3Id() != 0 && pr3!=null) {
 			price += searchProduct(cart.getProduct3Id()).getPrice() * cart.getProduct3Count();
 		}
 		return price;
